@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '../../firebase';
+import { useNavigate } from 'react-router-dom';
 
 
 const Login = () => {
+  const navigate = useNavigate()
+
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
   const [signUpClicked, setSignUpClicked] = useState(false)
+  
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -16,6 +20,8 @@ const Login = () => {
         // Login successful
         const user = userCredential.user;
         console.log(user);
+        const {email} = user
+        navigate('/userpage', { state: { email } });
       })
       .catch((error) => {
         // Handle login errors
