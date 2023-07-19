@@ -169,22 +169,30 @@ function UserPage() {
 
   return (
     <div className="user-page">
-      <h1 className="welcome">Welcome, {name}</h1>
-      <h1 className="welcome">Address: {geoLocation.address}</h1>
-      <p className="date">Current Date: {formattedDate}</p>
-      <p className="time">Current Time: {timeString}</p>
-      <p className="email">Email: {email}</p>
-      <button className="logout-btn" onClick={handleLogout}>
-        Logout
-      </button>
-      <button className="clock-in-btn" onClick={handleClockIn}>
-        Clock In
-      </button>
-      <button className="clock-out-btn" onClick={handleClockOut}>
-        Clock Out
-      </button>
-      <p className="clock-in-time">Clock In Time: {clockInTime}</p>
-      <p className="clock-out-time">Clock Out Time: {clockOutTime}</p>
+      <div className="time-date-div">
+        <p className="date">Date: {formattedDate}</p>
+        <p className="time">Time: {timeString}</p>
+      </div>
+      <h1 className="welcome">{name}</h1>
+      <div className="address-div">
+        <p className="address">Address</p>
+        <p className="address">{geoLocation.address}</p>
+      </div>
+      <div className="clockin-clockout-logout-div">
+        <button className="clock-in-btn" onClick={handleClockIn}>
+          Clock In
+        </button>
+        <button className="clock-out-btn" onClick={handleClockOut}>
+          Clock Out
+        </button>
+        <button className="logout-btn" onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
+      <div className="clock-time-div">
+        <p className="clock-in-time">Clock In Time: {clockInTime}</p>
+        <p className="clock-out-time">Clock Out Time: {clockOutTime}</p>
+      </div>
     </div>
   );
 }
