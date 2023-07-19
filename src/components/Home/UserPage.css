@@ -1,0 +1,49 @@
+.user-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #f0f0f0;
+  }
+  
+  .welcome {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .date,
+  .time,
+  .email {
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  
+  .logout-btn,
+  .clock-in-btn,
+  .clock-out-btn {
+    background-color: #e53935;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    cursor: pointer;
+  }
+  
+  .clock-in-btn {
+    background-color: #43a047;
+  }
+  
+  .clock-out-btn {
+    background-color: #fdd835;
+  }
+  
+  .clock-in-time,
+  .clock-out-time {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
