@@ -1,64 +1,112 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { auth, db } from '../../firebase'; // make sure to import your firestore database
-import { setDoc, doc } from '@firebase/firestore';
+import { auth, db } from '../../firebase';
+import { setDoc, doc, getDoc, updateDoc, collection, getDocs } from 'firebase/firestore';
 
 function UserPage() {
   const location = useLocation();
-  const { email, name } = location.state || {}; // also get the name from location state
+  const { email, name } = location.state || {};
+  console.log(name);
   const navigate = useNavigate();
-  
+
   const [clockInTime, setClockInTime] = useState(null);
   const [clockOutTime, setClockOutTime] = useState(null);
 
-  console.log('Email:', email);
-  console.log('Name:', name);
+  useEffect(() => {
+    const getUsers = async () => {
+      const usersCollectionRef = collection(db, 'users');
+      const usersSnapshot = await getDocs(usersCollectionRef);
+      console.log(usersSnapshot);
+      usersSnapshot.forEach((doc) => {
+        // console.log(doc.id, '=>', doc.data());
+      });
+    };
+
+    getUsers();
+  }, []);
+
 
   const handleLogout = () => {
     auth
       .signOut()
       .then(() => {
-        // Logout successful
-        navigate('/'); // Redirect to the login page or any other desired route
+        navigate('/');
       })
       .catch((error) => {
-        // Handle logout errors
         console.error('Logout Error:', error);
       });
   };
 
   const handleClockIn = async () => {
     const now = new Date();
+    const formattedDate = `${now.toLocaleString('default', { month: 'short' })} ${now.getDate()} ${now.getFullYear()}`;
     const timeString = `${now.getHours()}:${now.getMinutes()}`;
-  
-    setClockInTime(timeString);  // Set the clock in time
-  
-    const userRef = doc(db, 'users', email); // Assuming 'users' is your collection name and 'email' is unique identifier
-  
-    await setDoc(userRef, {
-      clockIn: timeString,
-      location: "new york", // this should be dynamic based on user's location
-      name: name,
-    }, { merge: true });
+    console.log(formattedDate);
+    setClockInTime(timeString);
+
+    const userRef = doc(db, 'users', name);
+
+    const docSnap = await getDoc(userRef);
+
+    if (!docSnap.exists()) {
+      await setDoc(userRef, {
+        name: name,
+        email: email,
+        clockIns: [
+          {
+            date: formattedDate,
+            clockInTime: timeString,
+          },
+        ],
+      });
+    } else {
+      const userData = docSnap.data();
+      let clockInsArray = userData.clockIns || [];
+      const existingClockIn = clockInsArray.find((clockIn) => clockIn.date === formattedDate);
+
+      if (!existingClockIn) {
+        // Create a new clockIn record if it doesn't exist for the date
+        clockInsArray.push({
+          date: formattedDate,
+          clockInTime: timeString,
+        });
+
+        await updateDoc(userRef, {
+          clockIns: clockInsArray,
+        });
+      }
+    }
   };
-  
-  
+
   const handleClockOut = async () => {
     const now = new Date();
+    const formattedDate = `${now.toLocaleString('default', { month: 'short' })} ${now.getDate()} ${now.getFullYear()}`;
     const timeString = `${now.getHours()}:${now.getMinutes()}`;
-  
-    setClockOutTime(timeString);  // Set the clock out time
-  
-    const userRef = doc(db, 'users', email); // Assuming 'users' is your collection name and 'email' is unique identifier
-  
-    await setDoc(userRef, {
-      clockOut: timeString,
-    }, { merge: true });
+
+    setClockOutTime(timeString);
+
+    const userRef = doc(db, 'users', name);
+    const docSnap = await getDoc(userRef);
+
+    if (docSnap.exists()) {
+      const userData = docSnap.data();
+      let clockInsArray = userData.clockIns || [];
+      const existingClockIn = clockInsArray.find((clockIn) => clockIn.date === formattedDate);
+
+      if (existingClockIn) {
+        // Update the existing clockIn record with clockOutTime
+        existingClockIn.clockOutTime = timeString;
+
+        await updateDoc(userRef, {
+          clockIns: clockInsArray,
+        });
+      }
+    }
   };
-  
+
   return (
     <div>
-      <h1>Welcome, {name}</h1> {/* display the user's name */}
+      <h1>Welcome, {name}</h1>
       <p>{email}</p>
       <button onClick={handleLogout}>Logout</button>
       <button onClick={handleClockIn}>Clock In</button>
