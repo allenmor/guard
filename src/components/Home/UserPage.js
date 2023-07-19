@@ -1,29 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { auth, db } from '../../firebase';
-import { setDoc, doc, getDoc, updateDoc, collection, getDocs } from 'firebase/firestore';
+import { setDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 
 function UserPage() {
   const location = useLocation();
   const { email, name } = location.state || {};
-  console.log(name);
   const navigate = useNavigate();
 
   const [clockInTime, setClockInTime] = useState(null);
   const [clockOutTime, setClockOutTime] = useState(null);
 
+
   useEffect(() => {
-    const getUsers = async () => {
-      const usersCollectionRef = collection(db, 'users');
-      const usersSnapshot = await getDocs(usersCollectionRef);
-      console.log(usersSnapshot);
-      usersSnapshot.forEach((doc) => {
-        // console.log(doc.id, '=>', doc.data());
-      });
+    const getUser = async () => {
+      const userRef = doc(db, 'users', name);
+      const docSnap = await getDoc(userRef);
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        const { clockIns } = userData;
+        if (clockIns && clockIns.length > 0) {
+          const { clockInTime, clockOutTime } = clockIns[clockIns.length - 1];
+          setClockInTime(clockInTime);
+          setClockOutTime(clockOutTime);
+        }
+      }
     };
 
-    getUsers();
-  }, []);
+    getUser();
+  }, [name]);
 
 
   const handleLogout = () => {
