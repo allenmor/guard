@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '../../firebase';
+import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -10,6 +10,8 @@ const Login = () => {
   const [loginPassword, setLoginPassword] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [signUpClicked, setSignUpClicked] = useState(false)
   
 
@@ -38,6 +40,14 @@ const Login = () => {
         // Sign-up successful
         const user = userCredential.user;
         console.log(user);
+
+        // Set user's full name
+        updateProfile(auth.currentUser, {
+          displayName: `${firstName} ${lastName}`
+        }).then(() => {
+          // Navigate to the next route with the email as state
+          navigate('/userpage', { state: { email: user.email, name: `${firstName} ${lastName}` } });
+        });
       })
       .catch((error) => {
         // Handle sign-up errors
@@ -81,6 +91,20 @@ const Login = () => {
       <>
         <h2 className="signup-header">Sign Up</h2>
         <form className="signup-form" onSubmit={handleSignUp}>
+          <input
+            className="signup-input"
+            type="text"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            placeholder="First Name"
+          />
+          <input
+            className="signup-input"
+            type="text"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            placeholder="Last Name"
+          />
           <input
             className="signup-input"
             type="email"
