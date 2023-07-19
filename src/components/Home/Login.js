@@ -7,6 +7,7 @@ const Login = () => {
   const [loginPassword, setLoginPassword] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
+  const [signUpClicked, setSignUpClicked] = useState(false)
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -40,40 +41,59 @@ const Login = () => {
       });
   };
   
+  const handleSignUpLoginClick = () => {
+    setSignUpClicked(prev => !prev)
+  }
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          value={loginEmail}
-          onChange={(e) => setLoginEmail(e.target.value)}
-          placeholder="Email"
-        />
-        <input
-          type="password"
-          value={loginPassword}
-          onChange={(e) => setLoginPassword(e.target.value)}
-          placeholder="Password"
-        />
-        <button type="submit">Login</button>
-      </form>
-      <h2>Sign Up</h2>
-      <form onSubmit={handleSignUp}>
-        <input
-          type="email"
-          value={signupEmail}
-          onChange={(e) => setSignupEmail(e.target.value)}
-          placeholder="Email"
-        />
-        <input
-          type="password"
-          value={signupPassword}
-          onChange={(e) => setSignupPassword(e.target.value)}
-          placeholder="Password"
-        />
-        <button type="submit">Sign Up</button>
-      </form>
+    <div className="login-container">
+      { 
+      !signUpClicked &&
+      <>
+        <h2 className="login-header">Login</h2>
+        <form className="login-form" onSubmit={handleLogin}>
+          <input
+            className="login-input"
+            type="email"
+            value={loginEmail}
+            onChange={(e) => setLoginEmail(e.target.value)}
+            placeholder="Email"
+          />
+          <input
+            className="login-input"
+            type="password"
+            value={loginPassword}
+            onChange={(e) => setLoginPassword(e.target.value)}
+            placeholder="Password"
+          />
+          <button className="submit-button" type="submit">Login</button>
+          <button className="switch-button" onClick={handleSignUpLoginClick}>Sign Up</button>
+        </form>
+      </>
+      }
+      {
+      signUpClicked &&
+      <>
+        <h2 className="signup-header">Sign Up</h2>
+        <form className="signup-form" onSubmit={handleSignUp}>
+          <input
+            className="signup-input"
+            type="email"
+            value={signupEmail}
+            onChange={(e) => setSignupEmail(e.target.value)}
+            placeholder="Email"
+          />
+          <input
+            className="signup-input"
+            type="password"
+            value={signupPassword}
+            onChange={(e) => setSignupPassword(e.target.value)}
+            placeholder="Password"
+          />
+          <button className="submit-button" type="submit">Sign Up</button>
+          <button className="switch-button" onClick={handleSignUpLoginClick}>Log In</button>
+        </form>
+      </>
+      }
     </div>
   );
 };
