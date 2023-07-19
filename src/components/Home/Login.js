@@ -18,20 +18,26 @@ const Login = () => {
   const handleLogin = (e) => {
     e.preventDefault();
     signInWithEmailAndPassword(auth, loginEmail, loginPassword)
-      .then((userCredential) => {
-        // Login successful
-        const user = userCredential.user;
-        console.log(user);
-        const {email} = user
-        navigate('/userpage', { state: { email } });
-      })
-      .catch((error) => {
-        // Handle login errors
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error(errorCode, errorMessage);
-      });
-  };
+        .then((userCredential) => {
+            // Login successful
+            const user = userCredential.user;
+
+            // Fetch the latest user profile information
+            user.reload().then(() => {
+                console.log(user);
+
+                const {email, displayName} = user
+                navigate('/userpage', { state: { email, name: displayName } });
+            });
+        })
+        .catch((error) => {
+            // Handle login errors
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.error(errorCode, errorMessage);
+        });
+};
+
   
   const handleSignUp = (e) => {
     e.preventDefault();
