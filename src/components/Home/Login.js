@@ -27,7 +27,7 @@ const Login = () => {
 
         // Fetch the latest user profile information
         user.reload().then(() => {
-          console.log(user);
+          // console.log(user);
 
           const { email, displayName } = user;
           navigate("/userpage", { state: { email, name: displayName } });

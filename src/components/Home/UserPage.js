@@ -167,6 +167,10 @@ function UserPage() {
     );
   }, []);
 
+  console.log(geoLocation.latitude);
+  console.log(geoLocation.longitude);
+  console.log(geoLocation.address);
+
   return (
     <div className="user-page">
       <div className="time-date-div">
