@@ -13,7 +13,8 @@ function UserPage() {
   const formattedDate = `${now.toLocaleString("default", {
     month: "short",
   })} ${now.getDate()} ${now.getFullYear()}`;
-  const timeString = `${now.getHours()}:${now.getMinutes()}`;
+  const timeString = now.toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit', timeZone: "America/New_York" });
+
   const navigate = useNavigate();
   const [geoLocation, setGeoLocation] = useState({
     latitude: null,
@@ -35,8 +36,8 @@ function UserPage() {
                 const { date, clockInTime, clockOutTime } = clockIns[clockIns.length - 1];
                 const clockInDateTime = new Date(`${date} ${clockInTime}`);
                 const clockOutDateTime = new Date(`${date} ${clockOutTime}`);
-                const userTimezoneClockInTime = clockInDateTime.toLocaleTimeString("en-US", { timeZone: "America/New_York" });
-                const userTimezoneClockOutTime = clockOutDateTime.toLocaleTimeString("en-US", { timeZone: "America/New_York" });
+                const userTimezoneClockInTime = clockInDateTime.toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit', timeZone: "America/New_York" });
+                const userTimezoneClockOutTime = clockOutDateTime.toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit',timeZone: "America/New_York" });
                 setClockInTime(userTimezoneClockInTime);
                 setClockOutTime(userTimezoneClockOutTime);
                 console.log(userTimezoneClockInTime);
