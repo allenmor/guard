@@ -5,6 +5,8 @@ import { setDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import "./UserPage.css";
 
 function UserPage() {
+
+    const [geoLocationSet, setGeoLocationSet] = useState(false)
   const location = useLocation();
   const { email, name } = location.state || {};
   const now = new Date();
@@ -21,7 +23,7 @@ function UserPage() {
   });
   const [clockInTime, setClockInTime] = useState(null);
   const [clockOutTime, setClockOutTime] = useState(null);
-  
+
   useEffect(() => {
     const getUser = async () => {
         const userRef = doc(db, "users", name);
@@ -160,6 +162,7 @@ function UserPage() {
                 ...prevState,
                 address: data.results[0].formatted_address,
               }));
+              setGeoLocationSet(true)
             } else {
               throw new Error("No results returned from geocoding API");
             }
@@ -178,11 +181,8 @@ function UserPage() {
         })),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
     );
+    console.log(geoLocation);
   }, []);
-
-  useEffect(() => {
-    console.log(clockInTime);
-  }, [clockInTime]);
   
 //   console.log(geoLocation.latitude);
 //   console.log(geoLocation.longitude);
@@ -200,12 +200,16 @@ function UserPage() {
         <p className="address">{geoLocation.address}</p>
       </div>
       <div className="clockin-clockout-logout-div">
-        <button className="clock-in-btn" onClick={handleClockIn}>
+       { geoLocationSet &&
+       <>
+       <button className="clock-in-btn" onClick={handleClockIn}>
           Clock In
         </button>
         <button className="clock-out-btn" onClick={handleClockOut}>
           Clock Out
         </button>
+       </>
+        }
         <button className="logout-btn" onClick={handleLogout}>
           Logout
         </button>
