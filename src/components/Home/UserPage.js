@@ -21,24 +21,31 @@ function UserPage() {
   });
   const [clockInTime, setClockInTime] = useState(null);
   const [clockOutTime, setClockOutTime] = useState(null);
-
+  
   useEffect(() => {
     const getUser = async () => {
-      const userRef = doc(db, "users", name);
-      const docSnap = await getDoc(userRef);
-      if (docSnap.exists()) {
-        const userData = docSnap.data();
-        const { clockIns } = userData;
-        if (clockIns && clockIns.length > 0) {
-          const { clockInTime, clockOutTime } = clockIns[clockIns.length - 1];
-          setClockInTime(clockInTime);
-          setClockOutTime(clockOutTime);
+        const userRef = doc(db, "users", name);
+        const docSnap = await getDoc(userRef);
+        if (docSnap.exists()) {
+            const userData = docSnap.data();
+            const { clockIns } = userData;
+            if (clockIns && clockIns.length > 0) {
+                const { date, clockInTime, clockOutTime } = clockIns[clockIns.length - 1];
+                const clockInDateTime = new Date(`${date} ${clockInTime}`);
+                const clockOutDateTime = new Date(`${date} ${clockOutTime}`);
+                const userTimezoneClockInTime = clockInDateTime.toLocaleTimeString("en-US", { timeZone: "America/New_York" });
+                const userTimezoneClockOutTime = clockOutDateTime.toLocaleTimeString("en-US", { timeZone: "America/New_York" });
+                setClockInTime(userTimezoneClockInTime);
+                setClockOutTime(userTimezoneClockOutTime);
+                console.log(userTimezoneClockInTime);
+                console.log(userTimezoneClockOutTime);
+            }
         }
-      }
     };
 
     getUser();
-  }, [name]);
+}, [name]);
+
 
   const handleLogout = () => {
     auth
@@ -57,6 +64,7 @@ function UserPage() {
       month: "short",
     })} ${now.getDate()} ${now.getFullYear()}`;
     const timeString = `${now.getHours()}:${now.getMinutes()}`;
+
     console.log(formattedDate);
     setClockInTime(timeString);
 
@@ -72,6 +80,7 @@ function UserPage() {
           {
             date: formattedDate,
             clockInTime: timeString,
+            clockInLocation: geoLocation.address,  // Add clockInLocation to clockIn data
           },
         ],
       });
@@ -87,6 +96,7 @@ function UserPage() {
         clockInsArray.push({
           date: formattedDate,
           clockInTime: timeString,
+          clockInLocation: geoLocation.address,  // Add clockInLocation to clockIn data
         });
 
         await updateDoc(userRef, {
@@ -118,6 +128,7 @@ function UserPage() {
       if (existingClockIn) {
         // Update the existing clockIn record with clockOutTime
         existingClockIn.clockOutTime = timeString;
+        existingClockIn.clockOutLocation = geoLocation.address;  // Add clockOutLocation to clockIn data
 
         await updateDoc(userRef, {
           clockIns: clockInsArray,
@@ -125,6 +136,8 @@ function UserPage() {
       }
     }
   };
+
+
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -167,9 +180,13 @@ function UserPage() {
     );
   }, []);
 
-  console.log(geoLocation.latitude);
-  console.log(geoLocation.longitude);
-  console.log(geoLocation.address);
+  useEffect(() => {
+    console.log(clockInTime);
+  }, [clockInTime]);
+  
+//   console.log(geoLocation.latitude);
+//   console.log(geoLocation.longitude);
+//   console.log(geoLocation.address);
 
   return (
     <div className="user-page">
