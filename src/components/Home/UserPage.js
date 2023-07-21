@@ -195,26 +195,26 @@ function UserPage() {
   }, []);
 
   return (
-    <div>
-      <div>
-        <p>Date: {formattedDate}</p>
-        <p>Time: {timeString}</p>
+    <div className="user-page-container">
+      <div className="date-time-logout-div">
+        <p>{formattedDate}</p>
+        <p>{timeString}</p>
+          <Button size="sm" variant="dark" onClick={handleLogout}>Logout</Button>
       </div>
       <h1>{name}</h1>
-      <div>
-        <p>Address</p>
-        <p>{geoLocation.address}</p>
+      <div className="address-div">
+        <p className="address-head">Address</p>
+        <p className="address-text">{geoLocation.address}</p>
       </div>
-      <div>
+      <div className="d-grid gap-2">
         {geoLocationSet && (
           <>
-            <Button onClick={handleClockIn}>Clock In</Button>
-            <Button onClick={handleClockOut}>Clock Out</Button>
+            <Button variant="success" onClick={handleClockIn}>Clock In</Button>
+            <Button variant="danger" onClick={handleClockOut}>Clock Out</Button>
           </>
         )}
-        <Button onClick={handleLogout}>Logout</Button>
       </div>
-      <div>
+      <div className="clockin-clockout-div">
         <p>Clock In Time: {clockInTime}</p>
         <p>Clock Out Time: {clockOutTime}</p>
       </div>

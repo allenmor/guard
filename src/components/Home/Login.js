@@ -13,6 +13,7 @@ import {
   FormControl,
   FormGroup,
   FormLabel,
+  FormText,
 } from "react-bootstrap";
 
 const Login = () => {
@@ -79,7 +80,7 @@ const Login = () => {
     setSignUpClicked((prev) => !prev);
   };
   return (
-    <div>
+    <div className="login-container">
       {!signUpClicked && (
         <>
           <h2>Login</h2>
@@ -108,9 +109,14 @@ const Login = () => {
             <Button type="submit" variant="primary">
               Login
             </Button>
-            <Button variant="secondary" onClick={handleSignUpLoginClick}>
-              Sign Up
-            </Button>
+            <FormGroup>
+              <FormText>
+                Don't have an account?
+              </FormText>
+              <button className="signup-login-alt" variant="secondary" onClick={handleSignUpLoginClick}>
+                Sign Up
+              </button>
+            </FormGroup>
           </Form>
         </>
       )}
@@ -153,13 +159,19 @@ const Login = () => {
                 onChange={(e) => setSignupPassword(e.target.value)}
                 placeholder="Password"
               />
+              <Form.Text id="passwordHelpBlock" muted>
+                Your password must be minimum 6 characters long.
+              </Form.Text>
             </FormGroup>
             <Button type="submit" variant="primary">
               Sign Up
             </Button>
-            <Button variant="secondary" onClick={handleSignUpLoginClick}>
-              Log In
-            </Button>
+            <FormGroup>
+              <FormText>Already have an account?</FormText>
+              <button className="signup-login-alt" onClick={handleSignUpLoginClick}>
+                Log In
+              </button>
+            </FormGroup>
           </Form>
         </>
       )}

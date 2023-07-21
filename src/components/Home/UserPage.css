@@ -1,0 +1,60 @@
+.user-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Arial', sans-serif;
+  background-color: #F0F0F0;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px;
+  margin: auto;
+}
+
+.date-time-logout-div {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.date-time-logout-div p {
+  margin: 0;
+  color: #333;
+  font-size: 1rem;
+}
+
+.date-time-logout-div button {
+  background-color: #333;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.address-div {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.address-div p {
+  color: #333;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.clockin-clockout-div {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.clockin-clockout-div p {
+  color: #333;
+  font-size: 1rem;
+}
