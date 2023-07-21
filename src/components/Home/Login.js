@@ -6,6 +6,14 @@ import {
   updateProfile,
 } from "../../firebase";
 import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import {
+  Button,
+  Form,
+  FormControl,
+  FormGroup,
+  FormLabel,
+} from "react-bootstrap";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -71,73 +79,88 @@ const Login = () => {
     setSignUpClicked((prev) => !prev);
   };
   return (
-    <div className="login-container">
+    <div>
       {!signUpClicked && (
         <>
-          <h2 className="login-header">Login</h2>
-          <form className="login-form" onSubmit={handleLogin}>
-            <input
-              className="login-input"
-              type="email"
-              value={loginEmail}
-              onChange={(e) => setLoginEmail(e.target.value)}
-              placeholder="Email"
-            />
-            <input
-              className="login-input"
-              type="password"
-              value={loginPassword}
-              onChange={(e) => setLoginPassword(e.target.value)}
-              placeholder="Password"
-            />
-            <button className="submit-button" type="submit">
+          <h2>Login</h2>
+          <Form onSubmit={handleLogin}>
+            <FormGroup>
+              <FormLabel>Email</FormLabel>
+              <FormControl
+                type="email"
+                value={loginEmail}
+                onChange={(e) => setLoginEmail(e.target.value)}
+                placeholder="Email"
+              />
+              <Form.Text className="text-muted">
+                We'll never share your email with anyone else.
+              </Form.Text>
+            </FormGroup>
+            <FormGroup>
+              <FormLabel>Password</FormLabel>
+              <FormControl
+                type="password"
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                placeholder="Password"
+              />
+            </FormGroup>
+            <Button type="submit" variant="primary">
               Login
-            </button>
-            <button className="switch-button" onClick={handleSignUpLoginClick}>
+            </Button>
+            <Button variant="secondary" onClick={handleSignUpLoginClick}>
               Sign Up
-            </button>
-          </form>
+            </Button>
+          </Form>
         </>
       )}
       {signUpClicked && (
         <>
-          <h2 className="signup-header">Sign Up</h2>
-          <form className="signup-form" onSubmit={handleSignUp}>
-            <input
-              className="signup-input"
-              type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              placeholder="First Name"
-            />
-            <input
-              className="signup-input"
-              type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              placeholder="Last Name"
-            />
-            <input
-              className="signup-input"
-              type="email"
-              value={signupEmail}
-              onChange={(e) => setSignupEmail(e.target.value)}
-              placeholder="Email"
-            />
-            <input
-              className="signup-input"
-              type="password"
-              value={signupPassword}
-              onChange={(e) => setSignupPassword(e.target.value)}
-              placeholder="Password"
-            />
-            <button className="submit-button" type="submit">
+          <h2>Sign Up</h2>
+          <Form onSubmit={handleSignUp}>
+            <FormGroup>
+              <FormLabel>First Name</FormLabel>
+              <FormControl
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="First Name"
+              />
+            </FormGroup>
+            <FormGroup>
+              <FormLabel>Last Name</FormLabel>
+              <FormControl
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                placeholder="Last Name"
+              />
+            </FormGroup>
+            <FormGroup>
+              <FormLabel>Email</FormLabel>
+              <FormControl
+                type="email"
+                value={signupEmail}
+                onChange={(e) => setSignupEmail(e.target.value)}
+                placeholder="Email"
+              />
+            </FormGroup>
+            <FormGroup>
+              <FormLabel>Password</FormLabel>
+              <FormControl
+                type="password"
+                value={signupPassword}
+                onChange={(e) => setSignupPassword(e.target.value)}
+                placeholder="Password"
+              />
+            </FormGroup>
+            <Button type="submit" variant="primary">
               Sign Up
-            </button>
-            <button className="switch-button" onClick={handleSignUpLoginClick}>
+            </Button>
+            <Button variant="secondary" onClick={handleSignUpLoginClick}>
               Log In
-            </button>
-          </form>
+            </Button>
+          </Form>
         </>
       )}
     </div>

@@ -2,18 +2,22 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { auth, db } from "../../firebase";
 import { setDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import { Button } from "react-bootstrap";
 import "./UserPage.css";
 
 function UserPage() {
-
-    const [geoLocationSet, setGeoLocationSet] = useState(false)
+  const [geoLocationSet, setGeoLocationSet] = useState(false);
   const location = useLocation();
   const { email, name } = location.state || {};
   const now = new Date();
   const formattedDate = `${now.toLocaleString("default", {
     month: "short",
   })} ${now.getDate()} ${now.getFullYear()}`;
-  const timeString = now.toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit', timeZone: "America/New_York" });
+  const timeString = now.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "America/New_York",
+  });
 
   const navigate = useNavigate();
   const [geoLocation, setGeoLocation] = useState({
@@ -27,28 +31,34 @@ function UserPage() {
 
   useEffect(() => {
     const getUser = async () => {
-        const userRef = doc(db, "users", name);
-        const docSnap = await getDoc(userRef);
-        if (docSnap.exists()) {
-            const userData = docSnap.data();
-            const { clockIns } = userData;
-            if (clockIns && clockIns.length > 0) {
-                const { date, clockInTime, clockOutTime } = clockIns[clockIns.length - 1];
-                const clockInDateTime = new Date(`${date} ${clockInTime}`);
-                const clockOutDateTime = new Date(`${date} ${clockOutTime}`);
-                const userTimezoneClockInTime = clockInDateTime.toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit', timeZone: "America/New_York" });
-                const userTimezoneClockOutTime = clockOutDateTime.toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit',timeZone: "America/New_York" });
-                setClockInTime(userTimezoneClockInTime);
-                setClockOutTime(userTimezoneClockOutTime);
-                console.log(userTimezoneClockInTime);
-                console.log(userTimezoneClockOutTime);
-            }
+      const userRef = doc(db, "users", name);
+      const docSnap = await getDoc(userRef);
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        const { clockIns } = userData;
+        if (clockIns && clockIns.length > 0) {
+          const { date, clockInTime, clockOutTime } =
+            clockIns[clockIns.length - 1];
+          const clockInDateTime = new Date(`${date} ${clockInTime}`);
+          const clockOutDateTime = new Date(`${date} ${clockOutTime}`);
+          const userTimezoneClockInTime = clockInDateTime.toLocaleTimeString(
+            "en-US",
+            { hour: "2-digit", minute: "2-digit", timeZone: "America/New_York" }
+          );
+          const userTimezoneClockOutTime = clockOutDateTime.toLocaleTimeString(
+            "en-US",
+            { hour: "2-digit", minute: "2-digit", timeZone: "America/New_York" }
+          );
+          setClockInTime(userTimezoneClockInTime);
+          setClockOutTime(userTimezoneClockOutTime);
+          console.log(userTimezoneClockInTime);
+          console.log(userTimezoneClockOutTime);
         }
+      }
     };
 
     getUser();
-}, [name]);
-
+  }, [name]);
 
   const handleLogout = () => {
     auth
@@ -83,7 +93,7 @@ function UserPage() {
           {
             date: formattedDate,
             clockInTime: timeString,
-            clockInLocation: geoLocation.address,  // Add clockInLocation to clockIn data
+            clockInLocation: geoLocation.address, // Add clockInLocation to clockIn data
           },
         ],
       });
@@ -99,7 +109,7 @@ function UserPage() {
         clockInsArray.push({
           date: formattedDate,
           clockInTime: timeString,
-          clockInLocation: geoLocation.address,  // Add clockInLocation to clockIn data
+          clockInLocation: geoLocation.address, // Add clockInLocation to clockIn data
         });
 
         await updateDoc(userRef, {
@@ -131,7 +141,7 @@ function UserPage() {
       if (existingClockIn) {
         // Update the existing clockIn record with clockOutTime
         existingClockIn.clockOutTime = timeString;
-        existingClockIn.clockOutLocation = geoLocation.address;  // Add clockOutLocation to clockIn data
+        existingClockIn.clockOutLocation = geoLocation.address; // Add clockOutLocation to clockIn data
 
         await updateDoc(userRef, {
           clockIns: clockInsArray,
@@ -139,8 +149,6 @@ function UserPage() {
       }
     }
   };
-
-
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -163,7 +171,7 @@ function UserPage() {
                 ...prevState,
                 address: data.results[0].formatted_address,
               }));
-              setGeoLocationSet(true)
+              setGeoLocationSet(true);
             } else {
               throw new Error("No results returned from geocoding API");
             }
@@ -183,41 +191,32 @@ function UserPage() {
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
     );
     console.log(geoLocation);
+    // eslint-disable-next-line
   }, []);
-  
-//   console.log(geoLocation.latitude);
-//   console.log(geoLocation.longitude);
-//   console.log(geoLocation.address);
 
   return (
-    <div className="user-page">
-      <div className="time-date-div">
-        <p className="date">Date: {formattedDate}</p>
-        <p className="time">Time: {timeString}</p>
+    <div>
+      <div>
+        <p>Date: {formattedDate}</p>
+        <p>Time: {timeString}</p>
       </div>
-      <h1 className="welcome">{name}</h1>
-      <div className="address-div">
-        <p className="address">Address</p>
-        <p className="address">{geoLocation.address}</p>
+      <h1>{name}</h1>
+      <div>
+        <p>Address</p>
+        <p>{geoLocation.address}</p>
       </div>
-      <div className="clockin-clockout-logout-div">
-       { geoLocationSet &&
-       <>
-       <button className="clock-in-btn" onClick={handleClockIn}>
-          Clock In
-        </button>
-        <button className="clock-out-btn" onClick={handleClockOut}>
-          Clock Out
-        </button>
-       </>
-        }
-        <button className="logout-btn" onClick={handleLogout}>
-          Logout
-        </button>
+      <div>
+        {geoLocationSet && (
+          <>
+            <Button onClick={handleClockIn}>Clock In</Button>
+            <Button onClick={handleClockOut}>Clock Out</Button>
+          </>
+        )}
+        <Button onClick={handleLogout}>Logout</Button>
       </div>
-      <div className="clock-time-div">
-        <p className="clock-in-time">Clock In Time: {clockInTime}</p>
-        <p className="clock-out-time">Clock Out Time: {clockOutTime}</p>
+      <div>
+        <p>Clock In Time: {clockInTime}</p>
+        <p>Clock Out Time: {clockOutTime}</p>
       </div>
     </div>
   );
